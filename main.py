@@ -1,0 +1,1 @@
+eleccionMenu = input("Elija si desea \n (1) Ingresar en el menu de usuarios \n (2) el menu de las peliculas")
