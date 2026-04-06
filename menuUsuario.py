@@ -70,13 +70,6 @@ class InfUsuario:
                     del fecha_nacimiento[k]
                     del cedula[k]
                 k =+ 1
-                    
-                
-
-                            
-
-
-        
 
 
 
@@ -84,6 +77,7 @@ usu1 = InfUsuario()
 
 
 eleccion = 0
+
 
 while eleccion != 5:
     eleccion = int(input("Digite la eleccion \n (1) Si desea Ingresar un usuario nuevo \n (2) Si desesa ver cuantos usuarios hay registrados \n (3) Si desea actualizar la informacion de un usuario ya existente \n (4) Si desea Borrar a un usuario \n (5) salir \n ingresa tu opcion: "))
