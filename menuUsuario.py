@@ -1,12 +1,12 @@
 nombre = []
 apellido = []
 correo = []
+#hacerlo con matrices
 fecha_nacimiento = []
 cedula = []
 contra = []
 
-
-class InfUsuario:
+class Usuario:
     def usuarioNuevo(self):
         print("---------REGISTRAR A UN USUARIO---------")
 
@@ -15,11 +15,12 @@ class InfUsuario:
 
         apellidoU = input("Ingrese el apellido del usuario nuevo: ")
         apellido.append(apellidoU)
-        
+
         #confirmar con @
         correoU = input("Ingrese el correo del usuario nuevo: ")
         correo.append(correoU)
 
+        #con matriz
         fecha_nacimientoU = input("Ingrese la fecha de naciemiento del usuario nuevo: ")
         fecha_nacimiento.append(fecha_nacimientoU)
 
@@ -69,11 +70,12 @@ class InfUsuario:
                     del correo[k]
                     del fecha_nacimiento[k]
                     del cedula[k]
+                    del contra[k]
                 k =+ 1
 
 
 
-usu1 = InfUsuario()               
+usu1 = Usuario()               
 
 
 eleccion = 0
