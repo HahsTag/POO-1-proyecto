@@ -1,92 +1,129 @@
-nombre = []
-apellido = []
-correo = []
-#hacerlo con matrices
-fecha_nacimiento = []
-cedula = []
-contra = []
+import pandas as pd
+listaUsuarios = {}
 
 class Usuario:
-    def usuarioNuevo(self):
-        print("---------REGISTRAR A UN USUARIO---------")
 
-        nombreU = input("Ingrese el nombre del usuario nuevo: ")
-        nombre.append(nombreU)
+    def __init__(self, nombre, apellido, correo, fechaN, cedula, contra, isCeV = False):
 
-        apellidoU = input("Ingrese el apellido del usuario nuevo: ")
-        apellido.append(apellidoU)
+        self.nombre = nombre
+        self.apellido = apellido
+        self.correo = correo
+        self.fechaN = fechaN
+        self.cedula = cedula
+        self.contra = contra
+        self.isCeV = isCeV
+        
 
-        #confirmar con @
-        correoU = input("Ingrese el correo del usuario nuevo: ")
-        correo.append(correoU)
+    def registroUsuario(self):
 
-        #con matriz
-        fecha_nacimientoU = input("Ingrese la fecha de naciemiento del usuario nuevo: ")
-        fecha_nacimiento.append(fecha_nacimientoU)
+        for clave in listaUsuarios.keys():
+            if clave == self.cedula:
+                self.isCeV == True
+                return
 
-        #verificar cedula existencia
-        cedulaU = int(input("Ingrese la cedula del usuario nuevo: "))
-        cedula.append(cedulaU)
-
-        contraU = input("Digite la contraseña que va a tener esta cuenta de este usuario: ")
-        contra.append(contraU)
-
+        listaUsuarios[self.cedula] = {
+        "nombre": self.nombre,
+        "apellido": self.apellido,
+        "correo": self.correo,
+        "fecha": self.fechaN,
+        "contraseña": self.contra
+        } 
+        print("El usuario a sido registrado")  
     
     def verUsuarios(self):
-        if len(nombre) == 0:
-            print("No se han registrado usuarios")
-        else: 
-            for i in range(len(nombre)):
-                print(f"el usuario {i} \n Nombre: {nombre[i]} {apellido[i]} \n Fecha: {fecha_nacimiento[i]} \n Correo: {correo[i]} \n Cedula: {cedula[i]}")
-
+        if listaUsuarios:
+            df_usuarios = pd.DataFrame(listaUsuarios)
+            print(df_usuarios)
+        else:
+            print("No se han registrado usuarios")           
 
     def actUsuario(self):
             cedulaE = int(input("Digite la cedula del usuario al cual desea modificar la informacion: "))
             k = 0
-            for i in cedula:
-                if i == cedulaE:
-                    eleccionUp = int(input("Que informacion desea modificar: \n (1) Nombre/s \n (2) Apellido/s \n (3) Correo \n (4) Ir atras \n Elija: "))
+            for clave in listaUsuarios.keys():
+                if clave == cedulaE:
+                    eleccionUp = int(input("Que informacion desea modificar: \n (1) Nombre/s \n (2) Correo \n (3) Todas las anteriores \n (4) ir atras \n Elija: "))
                     match eleccionUp:
                             case 1:
-                                nombre[k] = input("Ingrese el nombre nuevo del usuario: ")
+                                listaUsuarios[clave]["nombre"] = input("Ingrese el nombre nuevo para el usuario: ")
+                                listaUsuarios[clave]["apellido"] = input("Ingrese el apellido nuevo para el usuario: ")
                             case 2:
-                                apellido[k] = input("Ingrese el apellido nuevo del usuario: ")
+                                correoNuevo = input("Ingrese el correo nuevo para el usuario: ")
+
+                                for arrova in correoNuevo:
+                                    if arrova == " ":
+                                        print("Recuerde que el correo electronico no puede tener espacios!!!")
+                                        return
+                                    
+                                    elif arrova == "@":
+                                        listaUsuarios[clave]["correo"] = correoNuevo
+
+                                    else:
+                                        k += 1
+
+                                if len(correoNuevo) == k:
+                                    print("Recuerde que el correo electronico debe tener un arrova")
+                                    return
+
                             case 3:
-                                #confirmar con @
-                                correo[k] = input("Ingrese el correo nuevo del usuario: ")
+                                listaUsuarios[clave]["nombre"] = input("Ingrese el nombre nuevo para el usuario: ")
+                                listaUsuarios[clave]["apellido"] = input("Ingrese el apellido nuevo para el usuario: ")
+                                correoNuevo = input("Ingrese el correo nuevo para el usuario: ")
+
+                                for arrova in correoNuevo:
+                                    if arrova == " ":
+                                        print("Recuerde que el correo electronico no puede tener espacios!!!")
+                                        return
+                                    
+                                    elif arrova == "@":
+                                        listaUsuarios[clave]["correo"] = correoNuevo
+
+                                    else:
+                                        k += 1
+
+                                if len(correoNuevo) == k:
+                                    print("Recuerde que el correo electronico debe tener un arrova")
+                                    return
+
                             case 4:
                                 break
-                k =+ 1
-
+                                
     def borrarUsuario(self):
-            
             cedulaE = int(input("Digite la cedula del usuario que desea eliminar: "))
-            k = 0
-            for i in cedula:
-                if i == cedulaE:
-                    print(f"Se a eliminado a el usuario con \n nombre: {nombre[k]} {apellido[k]} \n correo: {correo[k]} \n Fecha: {fecha_nacimiento[k]} \n Cedula: {cedula[k]} \n Contraseña: {contra[k]}")
-                    del nombre[k]
-                    del apellido[k]
-                    del correo[k]
-                    del fecha_nacimiento[k]
-                    del cedula[k]
-                    del contra[k]
-                k =+ 1
-
-
-
-usu1 = Usuario()               
-
+            for clave in list(listaUsuarios.keys()):
+                if clave == cedulaE:
+                    print(f"Se a eliminado a el usuario con \n nombre: {listaUsuarios[clave]["nombre"]} {listaUsuarios[clave]["apellido"]} \n correo: {listaUsuarios[clave]["correo"]} \n Fecha: {listaUsuarios[clave]["fecha"]} \n Contraseña: {listaUsuarios[clave]["contraseña"]}")
+                    del listaUsuarios[clave]
 
 eleccion = 0
-
 
 while eleccion != 5:
     eleccion = int(input("Digite la eleccion \n (1) Si desea Ingresar un usuario nuevo \n (2) Si desesa ver cuantos usuarios hay registrados \n (3) Si desea actualizar la informacion de un usuario ya existente \n (4) Si desea Borrar a un usuario \n (5) salir \n ingresa tu opcion: "))
     match eleccion:
         case 1:
-            usu1.usuarioNuevo()
-            print("El usuario se a registrado exitosamente")
+            k = 0  
+            print("---------REGISTRAR A UN USUARIO---------")
+            nombre = input("Ingrese el nombre del usuario nuevo: ")
+            apellido = input("Ingrese el apellido del usuario nuevo: ")
+            correoNuevo = input("Ingrese el correo del usuario nuevo: ")
+            for arrova in correoNuevo:
+                if arrova == " ":
+                    k = len(correoNuevo)
+                    break
+                elif arrova == "@":
+                    correo = correoNuevo
+                else:
+                    k += 1
+            if len(correoNuevo) == k:
+                print("Recuerde que el correo NO permite caracteres especiales y debe tener contener un arrova")
+                break
+             
+            fechaN = input("Ingrese la fecha de nacimiento del usuario nuevo: ")
+            cedula = int(input("Ingrese la cedula del usuario nuevo: "))
+            contra = input("Ingrese la contraseña del usuario nuevo: ")
+            usu1 = Usuario(nombre, apellido, correo, fechaN, cedula, contra)
+            usu1.registroUsuario()
+
         case 2: 
             usu1.verUsuarios()
         case 3:  
