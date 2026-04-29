@@ -111,7 +111,7 @@ class Documental(Contenido):
 # Menú principal
 eleccion = 0
 while (True):
-    eleccion = int(input("\nMenú de Contenido\n (1) Registrar nuevo contenido \n (2) Mostrar contenido \n (3) Actualizar contenido \n (4) Eliminar contenido \n (5) Salir \n Opción: "))
+    eleccion = int(input("\nMenú de Contenido\n (1) Registrar nuevo contenido \n (2) Mostrar contenido \n (3) Salir \n Opción: "))
     match eleccion:
         case 1:
             print("---- REGISTRAR CONTENIDO ----")
