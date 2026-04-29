@@ -110,7 +110,7 @@ class Documental(Contenido):
 
 # Menú principal
 eleccion = 0
-while eleccion != 5:
+while (True):
     eleccion = int(input("\nMenú de Contenido\n (1) Registrar nuevo contenido \n (2) Mostrar contenido \n (3) Actualizar contenido \n (4) Eliminar contenido \n (5) Salir \n Opción: "))
     match eleccion:
         case 1:
@@ -139,3 +139,6 @@ while eleccion != 5:
         case 5:
             print("Hasta luego, administrador polla peque.")
             break
+
+        case _:
+            print("Numero o dato ingresa es invalido, por favor intente de nuevo!")
