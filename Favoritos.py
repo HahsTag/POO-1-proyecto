@@ -1,2 +1,0 @@
-class Favorito:
-    favoritos = {}

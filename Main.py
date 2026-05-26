@@ -1,5 +1,5 @@
 from Contenido import Pelicula, Serie, Documental, Contenido
-from Favoritos import Favorito
+from Favoritos_a import Favorito
 
 menuUsuario = None
 contenido = None

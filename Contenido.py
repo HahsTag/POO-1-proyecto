@@ -1,41 +1,102 @@
 import pandas as pd
-import time
+from datetime import datetime
 
 #Clase Padre
 class Contenido:
-    vector = {}
-    contador = 1
-    def __init__(self, titulo, anioDePublicacion, sinopsis, genero, tipo, isId=False):
-        self.titulo = titulo
+    catalogo_general = {}
+
+    def __init__(self, titulo, anioDePublicacion, sinopsis, genero, tipo):
+        self.titulo = titulo.strip()
         self.genero = genero
-        self.sinopsis = sinopsis
-        anioFormato = time.strftime(anioDePublicacion, "%d/%m/%Y")
-        self.anioDePublicacion = anioFormato
-        self.id = Contenido.contador
-        Contenido.contador += 1   #Aumenta el id consecutivamente sin repetirse
-        self.tipo = tipo  
-        self.isId = isId
+        self.sinopsis = sinopsis.strip()
+        self.anioDePublicacion = anioDePublicacion
+        self.tipo = tipo
 
-    def registrar(self):
-        for clave in self.vector.keys():
-            if self.vector[clave]["titulo"].lower() == self.titulo.lower():
-                print("Ese contenido ya existe, no se puede duplicar.")
-                self.isId = True
-                return
+    @classmethod
+    def verificarTituloRepetido(cls, titulo_ingresado):
 
-        self.vector[self.id] = {
-            "titulo": self.titulo,
-            "anioDePublicacion": self.anioDePublicacion,
-            "sinopsis": self.sinopsis,
-            "genero": self.genero,
-            "tipo": self.tipo
-        }
+        for contenido in cls.catalogo_general.values():
+            if contenido["titulo"].lower() == titulo_ingresado.strip().lower():
+                print("El título del contenido ya existe, no se puede duplicar")
+                return False
+                
+        return True
+    
 
-        print("El contenido ha sido registrado.")
+    @staticmethod
+    def validarAnioPublicacion(fechaFormato):
+        try:
+            # Intentar convertir la cadena en una fecha real
+            fecha_ingresada = datetime.strptime(fechaFormato, "%d/%m/%Y").date()
+            fecha_actual = datetime.now().date() #Fecha actual
+            
+            if fecha_ingresada.year < 1850:
+                print("El anio de publicacion no puede ser menor a 1850")
+                return None
+            
+            if fecha_ingresada > fecha_actual:
+                print("La fecha ingresada no puede ser mayor a la fecha actual")
+                return None
+                
+            return fecha_ingresada
+        
+        except ValueError:
+            print("Formato de fecha invalido, debe ser dd/mm/yyyy (Ej: 16/02/2000)")
+            return None
+    
+    @staticmethod
+    def validarCaracteres(texto, nombre, min = 10, max = 300):
+        longitud = len(texto.strip())
 
+        if longitud < min or longitud > max:
+            print(f"{nombre} debe tener entre {min} y {max} caracteres (Ingresaste: {longitud}).")
+            return False
+        
+        return True
+    
+
+    @staticmethod
+    def seleccionarGenero():
+        while True:
+
+            print("\n--- Seleccione el Genero ---")
+            print("1. Accion\n2. Comedia\n3. Drama\n4. Ciencia Ficcion\n5. Terror\n6. Informativo")
+
+            opcion = input("Digite el número de la opción: ").strip()     
+            match opcion:
+
+                case "1": 
+                    return "Acción"
+                case "2": 
+                    return "Comedia"
+                case "3": 
+                    return "Drama"
+                case "4": 
+                    return "Ciencia Ficción"
+                case "5": 
+                    return "Terror"
+                case "6": 
+                    return "Informativo"
+                case _:
+                    print("Opcion invalida, ingrese un número del 1 al 6.")
+
+    @staticmethod
+    def validarEnteroPositivo(valor):
+        if not valor.isdigit():
+            print(f"Debe ser un numero entero positivo (Ingresaste: {valor})")
+            return None
+        
+        numero = int(valor)
+        if numero <= 0:
+            print(f"Debe ser mayor que cero (Ingresaste: {numero})")
+            return None
+        
+        return numero
+
+    
     def mostrar(self):
-        if self.vector:
-            df_contenido = pd.DataFrame(self.vector).T
+        if self.catalogo_general:
+            df_contenido = pd.DataFrame(self.catalogo_general).T
             print(df_contenido)
         else:
             print("No se ha registrado contenido.")
@@ -43,99 +104,167 @@ class Contenido:
 
 #Estas son las clases hijas
 class Pelicula(Contenido):
+    contadorPeli = 1
     def __init__(self, titulo, anioDePublicacion, sinopsis, genero, duracionMinutos):
         self.titulo = titulo
         self.anioDePublicacion = anioDePublicacion
         self.sinopsis = sinopsis
         self.genero = genero
         self.duracionMinutos = duracionMinutos
-        self.id = Contenido.contador
-        Contenido.contador += 1
+        self.id = Pelicula.contadorPeli
+        Pelicula.contadorPeli += 1
         self.tipo = "Película"
-        self.isId = False
 
-        self.vector[self.id] = {
-            "titulo": titulo,
-            "anioDePublicacion": anioDePublicacion,
-            "sinopsis": sinopsis,
-            "genero": genero,
-            "duracionMinutos": duracionMinutos,
-            "tipo": "Película"
+    def listarPelicula(self):
+        self.catalogo_general[f"Pelicula {self.id}"] = {
+            "titulo": self.titulo,
+            "anioDePublicacion": self.anioDePublicacion,
+            "sinopsis": self.sinopsis,
+            "genero": self.genero,
+            "duracionMinutos": self.duracionMinutos,
+            "tipo": self.tipo
         }
 
+
 class Serie(Contenido):
+    contadorSerie = 1
     def __init__(self, titulo, anioDePublicacion, sinopsis, genero, temporadas):
         self.titulo = titulo
         self.anioDePublicacion = anioDePublicacion
         self.sinopsis = sinopsis
+        self.id = Serie.contadorSerie
+        Serie.contadorSerie += 1 
         self.genero = genero
-        self.id = Contenido.contador
-        Contenido.contador += 1
         self.tipo = "Serie"
-        self.isId = False
-
         self.temporadas = temporadas
 
-        self.vector[self.id] = {
-            "titulo": titulo,
-            "anioDePublicacion": anioDePublicacion,
-            "sinopsis": sinopsis,
-            "genero": genero,
-            "temporadas": temporadas,
-            "tipo": "Serie"
+    def listarSerie(self):    
+        self.catalogo_general[f"Serie {self.id}"] = {
+            "titulo": self.titulo,
+            "anioDePublicacion": self.anioDePublicacion,
+            "sinopsis": self.sinopsis,
+            "genero": self.genero,
+            "temporadas": self.temporadas,
+            "tipo": self.tipo
         }
 
+
 class Documental(Contenido):
+    contadorDocumental = 1
     def __init__(self, titulo, anioDePublicacion, sinopsis, genero, tema):
         self.titulo = titulo
         self.anioDePublicacion = anioDePublicacion
         self.sinopsis = sinopsis
         self.genero = genero
-        self.id = Contenido.contador
-        Contenido.contador += 1
+        self.id = Documental.contadorDocumental
+        Documental.contadorDocumental += 1 
         self.tipo = "Documental"
-        self.isId = False
-
         self.tema = tema
 
-        self.vector[self.id] = {
-            "titulo": titulo,
-            "anioDePublicacion": anioDePublicacion,
-            "sinopsis": sinopsis,
-            "genero": genero,
-            "tema": tema,
-            "tipo": "Documental"
+    def listaDocumental(self):
+        self.catalogo_general[f"Documental {self.id}"] = {
+            "titulo": self.titulo,
+            "anioDePublicacion": self.anioDePublicacion,
+            "sinopsis": self.sinopsis,
+            "genero": self.genero,
+            "tema": self.tema,
+            "tipo": self.tipo
         }
-
 
 # Menú principal
 eleccion = 0
 while (True):
-    eleccion = int(input("\nMenú de Contenido\n (1) Registrar nuevo contenido \n (2) Mostrar contenido \n (3) Salir \n Opción: "))
+    print("\n===============================")
+    print("       MENU DE CONTENIDO")
+    print("===============================")
+    print(" (1) Registrar nuevo contenido \n (2) Mostrar catalogo \n (3) Salir")
+
+    try:
+        eleccion = int(input("Ingresa una opcion: "))
+    except ValueError:
+        print("Por favor, ingrese solo números enteros")
+        continue
+
     match eleccion:
         case 1:
             print("---- REGISTRAR CONTENIDO ----")
-            tipo = int(input("Seleccione tipo: (1) Película (2) Serie (3) Documental: "))
-            titulo = input("Título: ")
-            anioDePublicacion = input("Año de publicacion (dd/mm/yyyy): ")
-            sinopsis = input("Sinopsis: ")
-            genero = input("Género: ")
+
+            tipo = 0
+
+            while tipo not in [1, 2, 3]:
+                opcion = input("Seleccione tipo: (1) Película (2) Serie (3) Documental: ").strip()
+                
+                match opcion:
+                    case "1":
+                        tipo = 1
+                    case "2":
+                        tipo = 2
+                    case "3":
+                        tipo = 3
+                    case _:
+                        print("Opcion invalida. Por favor, ingrese un numero del 1 al 3 (sin letras ni decimales)")
+            
+            while True:
+                titulo = input("Titulo: ").strip()
+
+                if Contenido.verificarTituloRepetido(titulo):
+                    break
+
+
+            while True:
+                fechaFormato = input("Año de publicación (dd/mm/yyyy): ")
+                validarFecha = Contenido.validarAnioPublicacion(fechaFormato)
+                
+                if validarFecha is not None:
+                    anioDePublicacion = validarFecha
+                    break 
+
+            while True:
+                sinopsis = input("Sinopsis (10-300 caracteres): ")
+                if Contenido.validarCaracteres(sinopsis, "Sipnosis"):
+                    break
+
+            genero = Contenido.seleccionarGenero()
 
             if tipo == 1:
-                duracionMinutos = input("Duración (minutos): ")
-                contenido = Pelicula(titulo, anioDePublicacion, sinopsis, genero, duracionMinutos)
-            elif tipo == 2:
-                temporadas = int(input("Número de temporadas: "))
-                contenido = Serie(titulo, anioDePublicacion, sinopsis, genero, temporadas)
-            elif tipo == 3:
-                tema = input("Tema principal del documental: ")
-                contenido = Documental(titulo, anioDePublicacion, sinopsis, genero, tema)
+                while True:
+                    duracionMinutos = input("Duración (minutos enteros): ").strip()
+                    duracionValida = Contenido.validarEnteroPositivo(duracionMinutos)
+                    if duracionValida is not None:
+                        break
+                
+                contenido = Pelicula(titulo, anioDePublicacion, sinopsis, genero, duracionValida)
+                contenido.listarPelicula()
 
-            print("Registro completado.")
+            elif tipo == 2:
+                while True:
+                    temporadas = input("Número de temporadas: ").strip()
+                    temporadasValida = Contenido.validarEnteroPositivo(temporadas)
+
+                    if temporadasValida is not None:
+                        break
+            
+                contenido = Serie(titulo, anioDePublicacion, sinopsis, genero, temporadasValida)
+                contenido.listarSerie()
+
+            elif tipo == 3:
+                while True:
+                    tema = input("Tema (5-35 caracteres): ")
+                    if Contenido.validarCaracteres(tema, "Tema", 5, 35):
+                        break
+
+                contenido = Documental(titulo, anioDePublicacion, sinopsis, genero, tema)
+                contenido.listaDocumental()
+
+            print("Registro completado con exito.")
 
         case 2:
-            contenido.mostrar()
-       
+            print("\n--- CATALOGO DE CONTENIDOS ---")
+            if not Contenido.catalogo_general:
+                print("No se ha registrado contenido en el catalogo.")
+            else:
+                contenido.mostrar()
+        
         case 5:
             print("Hasta luego, administrador polla peque.")
             break
