@@ -52,11 +52,6 @@ class Usuario:
         else:
             print("No se han registrado usuarios")          
 
-    
-
-
-
-
 def validarCorreo():
     global correo
     while True:
@@ -75,33 +70,4 @@ def validarCorreo():
             print("Recuerde que el correo debe tener un directorio por ejemplo (.com)")
             continue
         
-        return correo
-
-while True:
-    try:
-        eleccion = int(input("Digite la eleccion \n (1) Si desea Ingresar un usuario nuevo \n (2) Si desesa ver cuantos usuarios hay registrados \n (3)  salir \n ingresa tu opcion: "))
-    except ValueError:
-        print("El dato ingresado no es valido porfavor ingrese otro: ") 
-    match eleccion:
-        case 1:
-            print("---------REGISTRAR A UN USUARIO---------")
-            nombre = input("Ingrese el nombre del usuario nuevo: ")
-            apellido = input("Ingrese el apellido del usuario nuevo: ")
-
-            validarCorreo()
-
-            while True:
-                fechaFormato = input("Año publicacion (dd/mm/yyyy): ")
-                validarFecha = Usuario.validarAnioNacimiento(fechaFormato)
-
-                if validarFecha is not None:
-                    fechaN = validarFecha
-                    break       
-            menuUsuario = Usuario(nombre, apellido, correo, fechaN) 
-            menuUsuario.registrar()
-        case 2:
-            menuUsuario.mostrar()
-        case 3:
-            print("hasta luego esperamos verte pronto 👋")
-            break
-    
+        return correo   
