@@ -96,10 +96,20 @@ class Contenido:
     
     def mostrar(self):
         if self.catalogo_general:
+
             df_contenido = pd.DataFrame(self.catalogo_general).T
+
+            #Cuando hay un dato vacio lo sustituye por "No aplica"
+            df_contenido.fillna("No aplica", inplace=True)
+
+            pd.set_option("display.width", 180)
+            pd.set_option("display.max_columns", None)
+
+            print("\n======= CATALOGO FUTIMEDIA =======\n")
             print(df_contenido)
+
         else:
-            print("No se ha registrado contenido.")
+            print("No se ha registrado ningun contenido")
 
 
 #Estas son las clases hijas
@@ -170,104 +180,3 @@ class Documental(Contenido):
             "tema": self.tema,
             "tipo": self.tipo
         }
-
-# Menú principal
-eleccion = 0
-while (True):
-    print("\n===============================")
-    print("       MENU DE CONTENIDO")
-    print("===============================")
-    print(" (1) Registrar nuevo contenido \n (2) Mostrar catalogo \n (3) Salir")
-
-    try:
-        eleccion = int(input("Ingresa una opcion: "))
-    except ValueError:
-        print("Por favor, ingrese solo números enteros")
-        continue
-
-    match eleccion:
-        case 1:
-            print("---- REGISTRAR CONTENIDO ----")
-
-            tipo = 0
-
-            while tipo not in [1, 2, 3]:
-                opcion = input("Seleccione tipo: (1) Película (2) Serie (3) Documental: ").strip()
-                
-                match opcion:
-                    case "1":
-                        tipo = 1
-                    case "2":
-                        tipo = 2
-                    case "3":
-                        tipo = 3
-                    case _:
-                        print("Opcion invalida. Por favor, ingrese un numero del 1 al 3 (sin letras ni decimales)")
-            
-            while True:
-                titulo = input("Titulo: ").strip()
-
-                if Contenido.verificarTituloRepetido(titulo):
-                    break
-
-
-            while True:
-                fechaFormato = input("Año de publicación (dd/mm/yyyy): ")
-                validarFecha = Contenido.validarAnioPublicacion(fechaFormato)
-                
-                if validarFecha is not None:
-                    anioDePublicacion = validarFecha
-                    break 
-
-            while True:
-                sinopsis = input("Sinopsis (10-300 caracteres): ")
-                if Contenido.validarCaracteres(sinopsis, "Sipnosis"):
-                    break
-
-            genero = Contenido.seleccionarGenero()
-
-            if tipo == 1:
-                while True:
-                    duracionMinutos = input("Duración (minutos enteros): ").strip()
-                    duracionValida = Contenido.validarEnteroPositivo(duracionMinutos)
-                    if duracionValida is not None:
-                        break
-                
-                contenido = Pelicula(titulo, anioDePublicacion, sinopsis, genero, duracionValida)
-                contenido.listarPelicula()
-
-            elif tipo == 2:
-                while True:
-                    temporadas = input("Número de temporadas: ").strip()
-                    temporadasValida = Contenido.validarEnteroPositivo(temporadas)
-
-                    if temporadasValida is not None:
-                        break
-            
-                contenido = Serie(titulo, anioDePublicacion, sinopsis, genero, temporadasValida)
-                contenido.listarSerie()
-
-            elif tipo == 3:
-                while True:
-                    tema = input("Tema (5-35 caracteres): ")
-                    if Contenido.validarCaracteres(tema, "Tema", 5, 35):
-                        break
-
-                contenido = Documental(titulo, anioDePublicacion, sinopsis, genero, tema)
-                contenido.listaDocumental()
-
-            print("Registro completado con exito.")
-
-        case 2:
-            print("\n--- CATALOGO DE CONTENIDOS ---")
-            if not Contenido.catalogo_general:
-                print("No se ha registrado contenido en el catalogo.")
-            else:
-                contenido.mostrar()
-        
-        case 5:
-            print("Hasta luego, administrador polla peque.")
-            break
-
-        case _:
-            print("Numero o dato ingresa es invalido, por favor intente de nuevo!")
