@@ -1,6 +1,7 @@
+from Componentes.Usuario import Usuario
 import pandas as pd
 
-class Favoritos():
+class Favoritos(Usuario):
 
     lista_favoritos = {}
 
@@ -10,9 +11,6 @@ class Favoritos():
         
 
     def registrar(self, id):
-        # if self.id_usuario in self.lista_favoritos:
-        #     print(f"'{self.datos_contenido['titulo']}' ya está en tus favoritos.")
-        #     return False
         
         self.lista_favoritos[f"favorito {id} Usuario: {self.id_usuario}"] = self.datos_contenido
         print(f"'{self.datos_contenido['titulo']}' ha sido añadido a tus favoritos con éxito.")

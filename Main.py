@@ -1,10 +1,9 @@
-from Contenido import Pelicula, Serie, Documental, Contenido
-from Usuario import Usuario, validarCorreo
-from Favoritos import Favoritos
-import pandas as pd
+from Componentes.Contenido import Pelicula, Serie, Documental, Contenido
+from Componentes.Usuario import Usuario, validarCorreo
+from Componentes.Favoritos import Favoritos
 import time
 
-k = 0
+k = 1
 
 print("\n===============================")
 print("      BIENVENIDO A FUTIMEDIA      ")

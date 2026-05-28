@@ -1,10 +1,11 @@
 import pandas as pd
 from datetime import datetime
 
-#Clase Padre
 class Contenido:
+    #Vector/lista donde se almacena el contenido
     catalogo_general = {}
 
+    #Atributos de la clase Contenido
     def __init__(self, titulo, anioDePublicacion, sinopsis, genero, tipo):
         self.titulo = titulo.strip()
         self.genero = genero
@@ -12,21 +13,23 @@ class Contenido:
         self.anioDePublicacion = anioDePublicacion
         self.tipo = tipo
 
+    #Metodos de validacion
     @classmethod
     def verificarTituloRepetido(cls, titulo_ingresado):
 
+        #Recorre los valores del vector
         for contenido in cls.catalogo_general.values():
-            if contenido["titulo"].lower() == titulo_ingresado.strip().lower():
+
+            if contenido["titulo"].lower() == titulo_ingresado.strip().lower(): 
                 print("El título del contenido ya existe, no se puede duplicar")
                 return False
                 
         return True
     
-
     @staticmethod
     def validarAnioPublicacion(fechaFormato):
         try:
-            # Intentar convertir la cadena en una fecha real
+
             fecha_ingresada = datetime.strptime(fechaFormato, "%d/%m/%Y").date()
             fecha_actual = datetime.now().date() #Fecha actual
             
@@ -45,6 +48,7 @@ class Contenido:
             return None
     
     @staticmethod
+    #Funcion con parametros reutilizables
     def validarCaracteres(texto, nombre, min = 10, max = 300):
         longitud = len(texto.strip())
 
@@ -56,6 +60,7 @@ class Contenido:
     
 
     @staticmethod
+    #Mini-menu para el atributo Genero
     def seleccionarGenero():
         while True:
 
@@ -82,11 +87,14 @@ class Contenido:
 
     @staticmethod
     def validarEnteroPositivo(valor):
+
+        #Condicional que verifica si no esta en valores numericos
         if not valor.isdigit():
             print(f"Debe ser un numero entero positivo (Ingresaste: {valor})")
             return None
         
         numero = int(valor)
+
         if numero <= 0:
             print(f"Debe ser mayor que cero (Ingresaste: {numero})")
             return None
@@ -95,14 +103,15 @@ class Contenido:
 
     
     def mostrar(self):
+
         if self.catalogo_general:
 
             df_contenido = pd.DataFrame(self.catalogo_general).T
 
-            #Cuando hay un dato vacio lo sustituye por "No aplica"
+            
             df_contenido.fillna("No aplica", inplace=True)
 
-            pd.set_option("display.width", 180)
+            pd.set_option("display.width", 180) 
             pd.set_option("display.max_columns", None)
 
             print("\n======= CATALOGO FUTIMEDIA =======\n")
@@ -112,18 +121,20 @@ class Contenido:
             print("No se ha registrado ningun contenido")
 
 
-#Estas son las clases hijas
+#Clases hijas: 
+
 class Pelicula(Contenido):
-    contadorPeli = 1
+    contadorPeli = 1 #Contador del id Pelicula
+
     def __init__(self, titulo, anioDePublicacion, sinopsis, genero, duracionMinutos):
         self.titulo = titulo
         self.anioDePublicacion = anioDePublicacion
         self.sinopsis = sinopsis
         self.genero = genero
-        self.duracionMinutos = duracionMinutos
         self.id = Pelicula.contadorPeli
         Pelicula.contadorPeli += 1
         self.tipo = "Película"
+        self.duracionMinutos = duracionMinutos #Atributo propio
 
     def listarPelicula(self):
         self.catalogo_general[f"Pelicula {self.id}"] = {
@@ -137,7 +148,8 @@ class Pelicula(Contenido):
 
 
 class Serie(Contenido):
-    contadorSerie = 1
+    contadorSerie = 1 #Contador id Serie
+
     def __init__(self, titulo, anioDePublicacion, sinopsis, genero, temporadas):
         self.titulo = titulo
         self.anioDePublicacion = anioDePublicacion
@@ -146,7 +158,7 @@ class Serie(Contenido):
         Serie.contadorSerie += 1 
         self.genero = genero
         self.tipo = "Serie"
-        self.temporadas = temporadas
+        self.temporadas = temporadas #Atributo propio
 
     def listarSerie(self):    
         self.catalogo_general[f"Serie {self.id}"] = {
@@ -160,7 +172,8 @@ class Serie(Contenido):
 
 
 class Documental(Contenido):
-    contadorDocumental = 1
+    contadorDocumental = 1 #Contador del id Documental
+
     def __init__(self, titulo, anioDePublicacion, sinopsis, genero, tema):
         self.titulo = titulo
         self.anioDePublicacion = anioDePublicacion
@@ -169,7 +182,7 @@ class Documental(Contenido):
         self.id = Documental.contadorDocumental
         Documental.contadorDocumental += 1 
         self.tipo = "Documental"
-        self.tema = tema
+        self.tema = tema #Atributo propio
 
     def listaDocumental(self):
         self.catalogo_general[f"Documental {self.id}"] = {
