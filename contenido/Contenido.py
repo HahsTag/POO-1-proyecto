@@ -35,7 +35,7 @@ class Contenido:
                 return None
             
             if fecha_ingresada > fecha_actual:
-                print("La fecha ingresada no puede ser mayor a la fecha actual")
+                print("Recuerde que no puede ingresar fechas de estreno mayores al 2028")
                 return None
                 
             return fecha_ingresada
